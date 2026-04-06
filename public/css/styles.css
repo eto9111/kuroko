@@ -1,0 +1,92 @@
+body {
+    background-color: #f8fafc; /* gris muy claro */
+    color: #334155;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+}
+
+/* NAVBAR */
+nav {
+    background-color: #e2e8f0; /* gris pastel */
+    padding: 15px;
+    text-align: center;
+}
+
+nav a {
+    color: #64748b; /* gris azulado suave */
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+nav a:hover {
+    color: #94a3b8;
+}
+
+/* CONTENIDO */
+.container {
+    padding: 30px;
+}
+
+/* TITULOS */
+h1 {
+    color: #7c3aed; /* morado pastel */
+}
+
+h2 {
+    color: #60a5fa; /* azul pastel */
+}
+
+/* LISTAS */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #f1f5f9;
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+/* BOTONES */
+button {
+    background-color: #a5b4fc; /* azul pastel */
+    color: #1e293b;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #c7d2fe;
+}
+
+/* INPUTS */
+input {
+    padding: 8px;
+    width: 220px;
+    border-radius: 8px;
+    border: 1px solid #cbd5f5;
+}
+.card {
+    background: #ffffff;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.card img {
+    border-radius: 10px;
+    margin-top: 10px;
+}
+textarea, select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+}
