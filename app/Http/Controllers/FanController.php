@@ -11,7 +11,13 @@ class FanController extends Controller
     public function index()
     {
         $fans = Fan::all();
-        return view('contacto', compact('fans'));
+        return view('dashboard', compact('fans'));
+    }
+
+    public function comentarios()
+    {
+        $fans = Fan::all();
+        return view('comentarios', compact('fans'));
     }
 
     public function store(Request $request)
@@ -27,6 +33,6 @@ class FanController extends Controller
 
         Fan::create($request->all());
 
-        return redirect('/contacto')->with('success', '¡Información guardada exitosamente!');
+        return redirect('/dashboard')->with('success', '¡Información guardada exitosamente!');
     }
 }
