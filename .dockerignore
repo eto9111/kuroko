@@ -12,6 +12,5 @@ storage/framework/sessions/*
 storage/framework/testing/*
 storage/framework/views/*
 tests
-docker/
 docker-compose.yml
 README.md
