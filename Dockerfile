@@ -21,6 +21,7 @@ RUN apk add --no-cache \
     nginx \
     postgresql-dev \
     icu-dev \
+    libzip-dev \
     zip \
     unzip \
     curl \
