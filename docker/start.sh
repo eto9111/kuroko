@@ -9,7 +9,7 @@ if [ -z "${APP_KEY:-}" ]; then
 fi
 
 # Render runs behind HTTPS and may retain old session settings between deploys.
-export SESSION_DRIVER=file
+export SESSION_DRIVER=cookie
 export SESSION_SECURE_COOKIE=true
 export SESSION_COOKIE=kuroko_session
 
