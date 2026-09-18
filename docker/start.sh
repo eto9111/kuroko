@@ -8,6 +8,11 @@ if [ -z "${APP_KEY:-}" ]; then
 	exit 1
 fi
 
+# Render runs behind HTTPS and may retain old session settings between deploys.
+export SESSION_DRIVER=file
+export SESSION_SECURE_COOKIE=true
+export SESSION_COOKIE=kuroko_session
+
 # Update Nginx config to listen on the dynamic port
 sed -i "s/listen 80;/listen ${PORT};/g" /etc/nginx/http.d/default.conf
 
