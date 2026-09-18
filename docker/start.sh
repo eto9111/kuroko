@@ -3,6 +3,11 @@
 # Use the PORT environment variable provided by Render, or default to 80 if not set
 PORT=${PORT:-80}
 
+if [ -z "${APP_KEY:-}" ]; then
+	echo "ERROR: APP_KEY must be configured in the Render environment."
+	exit 1
+fi
+
 # Update Nginx config to listen on the dynamic port
 sed -i "s/listen 80;/listen ${PORT};/g" /etc/nginx/http.d/default.conf
 
