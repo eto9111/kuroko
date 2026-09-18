@@ -39,6 +39,10 @@ WORKDIR /var/www/html
 # Copiar los archivos de la aplicación
 COPY . .
 
+# Create the default SQLite database when PostgreSQL is not configured.
+RUN mkdir -p database \
+    && touch database/database.sqlite
+
 # Copiar los assets compilados de la Etapa 1
 COPY --from=frontend /app/public/build public/build
 
@@ -48,7 +52,8 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Asignar los permisos correctos a las carpetas de almacenamiento y caché de Laravel
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
+    && chmod -R 775 /var/www/html/bootstrap/cache \
+    && chmod 664 /var/www/html/database/database.sqlite
 
 # Copiar configuración de Nginx y script de arranque
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
