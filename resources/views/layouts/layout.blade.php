@@ -3,7 +3,7 @@
 <head>
     <title>Kuroko no Basket</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="stylesheet" href="/css/styles.css?v={{ filemtime(public_path('css/styles.css')) }}">
     @stack('styles')
 </head>
 <body>

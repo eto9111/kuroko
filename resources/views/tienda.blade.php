@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/store.css') }}">
+    <link rel="stylesheet" href="/css/store.css?v={{ filemtime(public_path('css/store.css')) }}">
 @endpush
 
 @section('content')
