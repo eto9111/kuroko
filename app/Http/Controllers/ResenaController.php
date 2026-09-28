@@ -10,13 +10,22 @@ class ResenaController extends Controller
 {
     public function store(Request $request)
     {
+        $messages = [
+            'contenido.required' => 'El campo Contenido está vacío, por favor rellénelo.',
+            'contenido.min' => 'El contenido debe tener al menos 5 caracteres.',
+            'rating.required' => 'El campo Calificación está vacío, por favor rellénelo.',
+            'producto.required' => 'El campo Producto está vacío, por favor rellénelo.',
+            'tiempo_llegada.required' => 'El campo Tiempo de llegada está vacío, por favor rellénelo.',
+            'estado_paquete.required' => 'El campo Estado del paquete está vacío, por favor rellénelo.',
+        ];
+
         $request->validate([
             'contenido' => 'required|string|min:5',
             'rating' => 'required|integer|min:1|max:5',
             'producto' => 'required|string|max:255',
             'tiempo_llegada' => 'required|string|max:100',
             'estado_paquete' => 'required|string|max:100',
-        ]);
+        ], $messages);
 
         Resena::create([
             'user_id' => Auth::id(),
@@ -45,13 +54,22 @@ class ResenaController extends Controller
             return redirect()->route('dashboard')->with('error', 'No puede actualizar esta publicación.');
         }
 
+        $messages = [
+            'contenido.required' => 'El campo Contenido está vacío, por favor rellénelo.',
+            'contenido.min' => 'El contenido debe tener al menos 5 caracteres.',
+            'rating.required' => 'El campo Calificación está vacío, por favor rellénelo.',
+            'producto.required' => 'El campo Producto está vacío, por favor rellénelo.',
+            'tiempo_llegada.required' => 'El campo Tiempo de llegada está vacío, por favor rellénelo.',
+            'estado_paquete.required' => 'El campo Estado del paquete está vacío, por favor rellénelo.',
+        ];
+
         $request->validate([
             'contenido' => 'required|string|min:5',
             'rating' => 'required|integer|min:1|max:5',
             'producto' => 'required|string|max:255',
             'tiempo_llegada' => 'required|string|max:100',
             'estado_paquete' => 'required|string|max:100',
-        ]);
+        ], $messages);
 
         $resena->update($request->only(['contenido', 'rating', 'producto', 'tiempo_llegada', 'estado_paquete']));
 

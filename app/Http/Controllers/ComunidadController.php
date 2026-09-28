@@ -21,13 +21,22 @@ class ComunidadController extends Controller
 
     public function store(Request $request)
     {
+        $messages = [
+            'nombre.required' => 'El campo Nombre está vacío, por favor rellénelo.',
+            'edad.required' => 'El campo Edad está vacío, por favor rellénelo.',
+            'personaje_favorito.required' => 'El campo Personaje Favorito está vacío, por favor rellénelo.',
+            'equipo_favorito.required' => 'El campo Equipo Favorito está vacío, por favor rellénelo.',
+            'mensaje.required' => 'El campo Mensaje está vacío, por favor rellénelo.',
+            'mensaje.min' => 'El Mensaje debe tener al menos 10 caracteres.',
+        ];
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'edad' => 'required|string|max:3',
             'personaje_favorito' => 'required|string|max:255',
             'equipo_favorito' => 'required|string|max:255',
             'mensaje' => 'required|string|min:10|max:1000',
-        ]);
+        ], $messages);
 
         Contacto::create([
             'user_id' => Auth::id(),

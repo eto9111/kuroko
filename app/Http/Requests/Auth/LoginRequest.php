@@ -33,6 +33,15 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'El campo Correo Electrónico está vacío, por favor rellénelo.',
+            'email.email' => 'El Correo Electrónico debe ser una dirección válida.',
+            'password.required' => 'El campo Contraseña está vacío, por favor rellénelo.',
+        ];
+    }
+
     /**
      * Attempt to authenticate the request's credentials.
      *
@@ -46,7 +55,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => 'La contraseña o el usuario son incorrectos.',
             ]);
         }
 
