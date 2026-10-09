@@ -10,10 +10,9 @@ class FanController extends Controller
 {
     public function index()
     {
-        $fans = Fan::all();
         $resenas = Resena::with('user')->latest()->get();
 
-        return view('dashboard', compact('fans', 'resenas'));
+        return view('dashboard', compact('resenas'));
     }
 
     public function comentarios()

@@ -26,8 +26,6 @@ Route::get('/nosotros', function () {
 use App\Http\Controllers\CapituloController;
 // mostrar capítulos
 Route::get('/capitulos', [CapituloController::class, 'index']);
-// guardar capítulos
-Route::post('/capitulos', [CapituloController::class, 'store']);
 
 use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\ComunidadController;
@@ -39,6 +37,8 @@ use App\Http\Controllers\ComunidadController;
 use App\Http\Controllers\FanController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    // guardar capítulos
+    Route::post('/capitulos', [CapituloController::class, 'store']);
     Route::get('/dashboard', [FanController::class, 'index'])->name('dashboard');
     Route::post('/dashboard', [FanController::class, 'store']);
     Route::post('/resenas', [ResenaController::class, 'store'])->name('resenas.store');
@@ -52,6 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/fans/{fan}/edit', [FanController::class, 'edit'])->name('fans.edit');
     Route::put('/fans/{fan}', [FanController::class, 'update'])->name('fans.update');
     Route::delete('/fans/{fan}', [FanController::class, 'destroy'])->name('fans.destroy');
+    Route::get('/comentarios', [FanController::class, 'comentarios'])->name('comentarios.index');
 });
 
 Route::middleware('auth')->group(function () {
