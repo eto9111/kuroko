@@ -4,12 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Capitulo;
+use Illuminate\Support\Facades\Log;
 
 class CapituloController extends Controller
 {
     public function index()
     {
-        $capitulos = Capitulo::all();
+        try {
+            $capitulos = Capitulo::all();
+        } catch (\Throwable $e) {
+            Log::warning('No se pudo consultar capítulos desde la base de datos: ' . $e->getMessage());
+            $capitulos = collect();
+        }
+
         return view('capitulos', compact('capitulos'));
     }
 
@@ -22,8 +29,12 @@ class CapituloController extends Controller
             'video_url' => 'required|url',
         ]);
 
-        Capitulo::create($request->all());
-
-        return redirect('/capitulos')->with('success', 'Capítulo guardado correctamente.');
+        try {
+            Capitulo::create($request->all());
+            return redirect('/capitulos')->with('success', 'Capítulo guardado correctamente.');
+        } catch (\Throwable $e) {
+            Log::error('Error al guardar capítulo: ' . $e->getMessage());
+            return redirect('/capitulos')->with('error', 'Error al guardar el capítulo en la base de datos.');
+        }
     }
 }

@@ -4,13 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\Contacto;
 
 class ComunidadController extends Controller
 {
     public function index()
     {
-        $contactos = Contacto::with('user')->latest()->paginate(10);
+        try {
+            $contactos = Contacto::with('user')->latest()->paginate(10);
+        } catch (\Throwable $e) {
+            Log::warning('No se pudieron consultar contactos de comunidad: ' . $e->getMessage());
+            $contactos = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
+        }
+
         return view('comunidad.index', compact('contactos'));
     }
 
@@ -38,17 +45,22 @@ class ComunidadController extends Controller
             'mensaje' => 'required|string|min:10|max:1000',
         ], $messages);
 
-        Contacto::create([
-            'user_id' => Auth::id(),
-            'nombre' => $request->nombre,
-            'correo' => Auth::user()->email,
-            'edad' => $request->edad,
-            'personaje_favorito' => $request->personaje_favorito,
-            'equipo_favorito' => $request->equipo_favorito,
-            'mensaje' => $request->mensaje,
-        ]);
+        try {
+            Contacto::create([
+                'user_id' => Auth::id(),
+                'nombre' => $request->nombre,
+                'correo' => Auth::user()->email,
+                'edad' => $request->edad,
+                'personaje_favorito' => $request->personaje_favorito,
+                'equipo_favorito' => $request->equipo_favorito,
+                'mensaje' => $request->mensaje,
+            ]);
 
-        return redirect()->route('comunidad.index')->with('success', '¡Tu perfil fue agregado exitosamente! Otros usuarios pueden contactarte.');
+            return redirect()->route('comunidad.index')->with('success', '¡Tu perfil fue agregado exitosamente! Otros usuarios pueden contactarte.');
+        } catch (\Throwable $e) {
+            Log::error('Error guardando contacto de comunidad: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Error al guardar el perfil en la base de datos.');
+        }
     }
 
     public function show(Contacto $contacto)

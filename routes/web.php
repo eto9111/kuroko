@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\CapituloController;
+use App\Http\Controllers\ComunidadController;
+use App\Http\Controllers\FanController;
+use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResenaController;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
@@ -9,36 +14,30 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('inicio');
-});
+})->name('inicio');
+
+Route::get('/menu', function () {
+    return view('menu');
+})->name('menu');
+
+Route::get('/nosotros', function () {
+    return view('nosotros');
+})->name('nosotros');
+
+// mostrar capítulos (accesible para todos)
+Route::get('/capitulos', [CapituloController::class, 'index'])->name('capitulos.index');
 
 Route::get('/tienda', function () {
     return view('tienda');
 })->name('tienda')->middleware('auth');
 
-Route::get('/menu', function () {
-    return view('menu');
-});
-
-Route::get('/nosotros', function () {
-    return view('nosotros');
-});
-
-use App\Http\Controllers\CapituloController;
-// mostrar capítulos
-Route::get('/capitulos', [CapituloController::class, 'index']);
-
-use App\Http\Controllers\ResenaController;
-use App\Http\Controllers\ComunidadController;
-
 // ==========================================
 // Rutas Privadas (Laravel Breeze)
 // ==========================================
 
-use App\Http\Controllers\FanController;
-
 Route::middleware(['auth', 'verified'])->group(function () {
     // guardar capítulos
-    Route::post('/capitulos', [CapituloController::class, 'store']);
+    Route::post('/capitulos', [CapituloController::class, 'store'])->name('capitulos.store');
     Route::get('/dashboard', [FanController::class, 'index'])->name('dashboard');
     Route::post('/dashboard', [FanController::class, 'store']);
     Route::post('/resenas', [ResenaController::class, 'store'])->name('resenas.store');
@@ -53,6 +52,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/fans/{fan}', [FanController::class, 'update'])->name('fans.update');
     Route::delete('/fans/{fan}', [FanController::class, 'destroy'])->name('fans.destroy');
     Route::get('/comentarios', [FanController::class, 'comentarios'])->name('comentarios.index');
+
+    // Rutas de personas (por compatibilidad con vistas existentes)
+    Route::resource('personas', PersonaController::class);
 });
 
 Route::middleware('auth')->group(function () {

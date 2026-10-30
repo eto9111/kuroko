@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\Resena;
 
 class ResenaController extends Controller
@@ -27,16 +28,21 @@ class ResenaController extends Controller
             'estado_paquete' => 'required|string|max:100',
         ], $messages);
 
-        Resena::create([
-            'user_id' => Auth::id(),
-            'contenido' => $request->contenido,
-            'rating' => $request->rating,
-            'producto' => $request->producto,
-            'tiempo_llegada' => $request->tiempo_llegada,
-            'estado_paquete' => $request->estado_paquete,
-        ]);
+        try {
+            Resena::create([
+                'user_id' => Auth::id(),
+                'contenido' => $request->contenido,
+                'rating' => $request->rating,
+                'producto' => $request->producto,
+                'tiempo_llegada' => $request->tiempo_llegada,
+                'estado_paquete' => $request->estado_paquete,
+            ]);
 
-        return redirect()->route('dashboard')->with('success', 'Opinión publicada correctamente.');
+            return redirect()->route('dashboard')->with('success', 'Opinión publicada correctamente.');
+        } catch (\Throwable $e) {
+            Log::error('Error guardando reseña: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Error al guardar la reseña en la base de datos.');
+        }
     }
 
     public function edit(Resena $resena)
@@ -71,9 +77,13 @@ class ResenaController extends Controller
             'estado_paquete' => 'required|string|max:100',
         ], $messages);
 
-        $resena->update($request->only(['contenido', 'rating', 'producto', 'tiempo_llegada', 'estado_paquete']));
-
-        return redirect()->route('dashboard')->with('success', 'Publicación actualizada correctamente.');
+        try {
+            $resena->update($request->only(['contenido', 'rating', 'producto', 'tiempo_llegada', 'estado_paquete']));
+            return redirect()->route('dashboard')->with('success', 'Publicación actualizada correctamente.');
+        } catch (\Throwable $e) {
+            Log::error('Error actualizando reseña: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Error al actualizar la reseña en la base de datos.');
+        }
     }
 
     public function destroy(Resena $resena)
@@ -82,8 +92,12 @@ class ResenaController extends Controller
             return redirect()->route('dashboard')->with('error', 'No puede eliminar esta publicación.');
         }
 
-        $resena->delete();
-
-        return redirect()->route('dashboard')->with('success', 'Publicación eliminada correctamente.');
+        try {
+            $resena->delete();
+            return redirect()->route('dashboard')->with('success', 'Publicación eliminada correctamente.');
+        } catch (\Throwable $e) {
+            Log::error('Error eliminando reseña: ' . $e->getMessage());
+            return redirect()->route('dashboard')->with('error', 'Error al eliminar la reseña.');
+        }
     }
 }

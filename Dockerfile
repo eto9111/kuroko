@@ -39,9 +39,17 @@ WORKDIR /var/www/html
 # Copiar los archivos de la aplicación
 COPY . .
 
-# Create the default SQLite database when PostgreSQL is not configured.
+# Configurar variables de entorno predeterminadas para contenedores
+ENV LOG_CHANNEL=stderr
+
+# Create the default SQLite database and storage structure
 RUN mkdir -p database \
-    && touch database/database.sqlite
+    && touch database/database.sqlite \
+    && mkdir -p storage/logs \
+    && mkdir -p storage/framework/cache/data \
+    && mkdir -p storage/framework/sessions \
+    && mkdir -p storage/framework/views \
+    && mkdir -p bootstrap/cache
 
 # Copiar los assets compilados de la Etapa 1
 COPY --from=frontend /app/public/build public/build

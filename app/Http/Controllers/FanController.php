@@ -5,19 +5,31 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Fan;
 use App\Models\Resena;
+use Illuminate\Support\Facades\Log;
 
 class FanController extends Controller
 {
     public function index()
     {
-        $resenas = Resena::with('user')->latest()->get();
+        try {
+            $resenas = Resena::with('user')->latest()->get();
+        } catch (\Throwable $e) {
+            Log::warning('No se pudieron consultar reseñas en dashboard: ' . $e->getMessage());
+            $resenas = collect();
+        }
 
         return view('dashboard', compact('resenas'));
     }
 
     public function comentarios()
     {
-        $fans = Fan::all();
+        try {
+            $fans = Fan::all();
+        } catch (\Throwable $e) {
+            Log::warning('No se pudieron consultar fans en comentarios: ' . $e->getMessage());
+            $fans = collect();
+        }
+
         return view('comentarios', compact('fans'));
     }
 
@@ -42,15 +54,23 @@ class FanController extends Controller
             'motivo' => 'required|string',
         ]);
 
-        $fan->update($request->all());
-
-        return redirect()->route('comentarios.index')->with('success', 'Fan actualizado correctamente');
+        try {
+            $fan->update($request->all());
+            return redirect()->route('comentarios.index')->with('success', 'Fan actualizado correctamente');
+        } catch (\Throwable $e) {
+            Log::error('Error actualizando fan: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Error al actualizar el registro en la base de datos.');
+        }
     }
 
     public function destroy(Fan $fan)
     {
-        $fan->delete();
-
-        return redirect()->route('comentarios.index')->with('success', 'Fan eliminado correctamente');
+        try {
+            $fan->delete();
+            return redirect()->route('comentarios.index')->with('success', 'Fan eliminado correctamente');
+        } catch (\Throwable $e) {
+            Log::error('Error eliminando fan: ' . $e->getMessage());
+            return redirect()->route('comentarios.index')->with('error', 'Error al eliminar el registro.');
+        }
     }
 }
